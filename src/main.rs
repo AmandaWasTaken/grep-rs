@@ -3,7 +3,7 @@ use std::env;
 use std::vec::Vec;
 use std::path::Path;
 use std::fs::File;
-use std::io::{self, BufReader, Read};
+use std::io::{self};
 use std::io::prelude::*;
 use colored::Colorize;
 
@@ -89,9 +89,10 @@ fn find_pattern(lines: Vec<String>, pattern: &str) ->
 // Find pattern within a trunced string and recolor it
 fn splice(line: &mut String, pattern: &str) -> std::io::Result<()> {
 
-    let res = line
+    let _ = line
         .split_whitespace()
-        .find(|&word| word.trim_matches(|c: char| !c.is_alphanumeric()) == pattern);
+        .find(|&word| word.trim_matches(
+              |c: char| !c.is_alphanumeric()) == pattern);
 
     Ok(())
 }
@@ -100,22 +101,25 @@ fn splice(line: &mut String, pattern: &str) -> std::io::Result<()> {
 // Prints truncated lines that contain a match for 'pattern'
 // @Return: result, always Ok(())
 fn print_matches(lines: &Vec<String>, 
-                 line_nums: &Vec<i32>, count: i16, pattern: &str) -> std::io::Result<()> {
+                 line_nums: &Vec<i32>,
+                 count: i16,
+                 pattern: &str
+    ) -> std::io::Result<()> {
    
     let mut current_line: usize = 0;
     println!("Pattern found on {} line(s)", count);
 
     for line in lines {
-//        print!("{} ", line_nums[current_line]);
+        print!("{}: ", line_nums[current_line]);
         for word in line.split_whitespace() {
             if word == pattern {
                 print!("{} ", word.green());
             } else {
                 print!("{} ", word);
             }
-            current_line += 1;
         }
         println!();
+        current_line += 1;
     }
 
     Ok(())
